@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Entities\Product.cs~RFbe9fcff.TMP" />
+    <None Remove="Entities\ProductCategory.cs~RFbe79b80.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services.Contract\" />
+  </ItemGroup>
+
+</Project>
