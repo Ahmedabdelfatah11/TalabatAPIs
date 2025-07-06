@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Talabat.Core.Entities;
 using Talabat.Core.Repository.Contract;
 using Talabat.Core.Specifications.Product_Specs;
 using Talabat.Repository.Data;
+using TalabatAPIs.Dtos;
 
 namespace TalabatAPIs.Controllers
 {
@@ -11,30 +13,32 @@ namespace TalabatAPIs.Controllers
     public class ProductsController : BaseApiController
     {
         private readonly IGenericRepository<Product> _productsRepo;
+        private readonly IMapper _mapper;
 
-        public ProductsController(IGenericRepository<Product> productsRepo)
+        public ProductsController(IGenericRepository<Product> productsRepo,IMapper mapper)
         {
             _productsRepo = productsRepo;
+            _mapper = mapper;
         }
         // /api/Products
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public async Task<ActionResult<IEnumerable<ProductToReturnDto>>> GetProducts()
         {
             var spec = new ProductWithBrandAndCategorySpecifications();
             var Products = await _productsRepo.GetAllWithSpecAsync(spec);
-            return Ok(Products);
+            return Ok(_mapper.Map<IEnumerable<Product>,IEnumerable<ProductToReturnDto>>(Products));
         }
 
         // /api/Products/1
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<ActionResult<ProductToReturnDto>> GetProduct(int id)
         {
             var spec = new ProductWithBrandAndCategorySpecifications(id);
 
-            var product = await _productsRepo.GetWithSpecAsync(spec);
-            if(product is null)
+            var products = await _productsRepo.GetWithSpecAsync(spec);
+            if(products is null)
                 return NotFound(new {Message="Not Found",StatusCode=404});
-            return Ok(product);
+            return Ok(_mapper.Map<Product, ProductToReturnDto>(products));
         }
 
     }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Talabat.Core.Repository.Contract;
 using Talabat.Repository;
 using Talabat.Repository.Data;
+using TalabatAPIs.Helper;
 
 namespace TalabatAPIs
 {
@@ -24,8 +25,10 @@ namespace TalabatAPIs
             });
 
             webApplicationbuilder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            //builder.Services.AddOpenApi();
+            webApplicationbuilder.Services.AddAutoMapper(typeof(MappingProfiles));
+
+            /// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+            ///builder.Services.AddOpenApi();
 
             #endregion
             var app = webApplicationbuilder.Build();
@@ -58,6 +61,7 @@ namespace TalabatAPIs
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
             app.UseAuthorization();
 
