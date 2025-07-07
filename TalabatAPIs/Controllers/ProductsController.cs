@@ -31,6 +31,8 @@ namespace TalabatAPIs.Controllers
         }
 
         // /api/Products/1
+        [ProducesResponseType(typeof(ProductToReturnDto),StatusCodes.Status200OK)]
+        [ProducesErrorResponseType(typeof(ApiResponse))]
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductToReturnDto>> GetProduct(int id)
         {
