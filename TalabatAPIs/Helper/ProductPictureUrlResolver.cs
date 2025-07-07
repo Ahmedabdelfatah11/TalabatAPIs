@@ -4,7 +4,6 @@ using TalabatAPIs.Dtos;
 
 namespace TalabatAPIs.Helper
 {
-    //using to resolve
     public class ProductPictureUrlResolver : IValueResolver<Product, ProductToReturnDto, string>
     {
         private readonly IConfiguration _config;
