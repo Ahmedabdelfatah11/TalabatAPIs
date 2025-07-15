@@ -6,10 +6,7 @@
 
         public ApiValidationErrorResponse() : base(400)
         {
-            Errors = new List<string>();
-            
+            Errors = new List<string>();   
         }
-
-
     }
 }

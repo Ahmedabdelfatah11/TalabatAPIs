@@ -15,19 +15,23 @@ namespace TalabatAPIs.Controllers
     {
         private readonly IGenericRepository<Product> _productsRepo;
         private readonly IMapper _mapper;
+        private readonly IGenericRepository<ProductBrand> _brandsRepo;
+        private readonly IGenericRepository<ProductCategory> _categoryRepo;
 
-        public ProductsController(IGenericRepository<Product> productsRepo,IMapper mapper)
+        public ProductsController(IGenericRepository<Product> productsRepo,IMapper mapper,IGenericRepository<ProductBrand> BrandsRepo,IGenericRepository<ProductCategory> CategoryRepo)
         {
             _productsRepo = productsRepo;
             _mapper = mapper;
+            _brandsRepo = BrandsRepo;
+            _categoryRepo = CategoryRepo;
         }
         // /api/Products
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductToReturnDto>>> GetProducts()
+        public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts()
         {
             var spec = new ProductWithBrandAndCategorySpecifications();
             var Products = await _productsRepo.GetAllWithSpecAsync(spec);
-            return Ok(_mapper.Map<IEnumerable<Product>,IEnumerable<ProductToReturnDto>>(Products));
+            return Ok(_mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(Products));
         }
 
         // /api/Products/1
@@ -42,6 +46,18 @@ namespace TalabatAPIs.Controllers
             if(products is null)
                 return NotFound(new ApiResponse(404));
             return Ok(_mapper.Map<Product, ProductToReturnDto>(products));
+        } 
+        [HttpGet("brands")]
+        public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetBrands()
+        {
+            var brands = await _brandsRepo.GetAllAsync();
+            return Ok(brands);
+        } 
+        [HttpGet("categories")]
+        public async Task<ActionResult<IReadOnlyList<ProductCategory>>> GetCategories()
+        {
+            var categories = await _categoryRepo.GetAllAsync();
+            return Ok(categories);
         }
 
     }
