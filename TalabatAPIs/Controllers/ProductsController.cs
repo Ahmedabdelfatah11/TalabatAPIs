@@ -7,6 +7,7 @@ using Talabat.Core.Specifications.Product_Specs;
 using Talabat.Repository.Data;
 using TalabatAPIs.Dtos;
 using TalabatAPIs.Errors;
+using TalabatAPIs.Helper;
 
 namespace TalabatAPIs.Controllers
 {
@@ -27,11 +28,19 @@ namespace TalabatAPIs.Controllers
         }
         // /api/Products
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts(string? sort,int? brandId,int?categoryId)
+        public async Task<ActionResult<Pagination<ProductToReturnDto>>> GetProducts([FromQuery]ProductSpecParams specParams)
         {
-            var spec = new ProductWithBrandAndCategorySpecifications(sort,brandId,categoryId);
+            var spec = new ProductWithBrandAndCategorySpecifications(specParams);
+            
             var Products = await _productsRepo.GetAllWithSpecAsync(spec);
-            return Ok(_mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(Products));
+            
+            var data = _mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(Products);
+           
+            var countspec = new ProductsWithFilterationForCountSpecifications(specParams);
+            
+            var count = await _productsRepo.GetCountAsync(countspec);
+            
+            return Ok(new Pagination<ProductToReturnDto>(specParams.PageIndex,specParams.PageSize,count,data));
         }
 
         // /api/Products/1
