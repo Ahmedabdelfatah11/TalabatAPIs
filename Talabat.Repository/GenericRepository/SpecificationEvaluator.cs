@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 using Talabat.Core.Entities;
 using Talabat.Core.Specifications;
 
-namespace Talabat.Repository
+namespace Talabat.Repository.GenericRepository
 {
     internal static class SpecificationEvaluator<TEntity> where TEntity : BaseEntity
     {
-        public static IQueryable<TEntity> GetQuery(IQueryable<TEntity> Inputquery,ISpecifications<TEntity> spec)
+        public static IQueryable<TEntity> GetQuery(IQueryable<TEntity> Inputquery, ISpecifications<TEntity> spec)
         {
             var query = Inputquery;
             if (spec.Criteria != null)
@@ -27,12 +27,13 @@ namespace Talabat.Repository
             {
                 query = query.OrderByDescending(spec.OrderByDesc);
             }
-            if(spec.IsPaginationEnabled)
+            if (spec.IsPaginationEnabled)
             {
                 query = query.Skip(spec.Skip).Take(spec.Take);
             }
 
-            spec.Includes.Aggregate(query, (current, include) => current.Include(include));
+            query = spec.Includes.Aggregate(query, (current, include) => current.Include(include));
+
             return query;
         }
     }

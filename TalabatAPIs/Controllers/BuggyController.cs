@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Talabat.Repository.Data;
+using Talabat.Repository.GenericRepository.Data;
 
 namespace TalabatAPIs.Controllers
 {

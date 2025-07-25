@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Talabat.Core.Entities;
 
-namespace Talabat.Repository.Data
+namespace Talabat.Repository.GenericRepository.Data
 {
     public static class StoredContextSeed
     {
@@ -58,6 +58,6 @@ namespace Talabat.Repository.Data
 
 
 
-        }   
+        }
     }
 }

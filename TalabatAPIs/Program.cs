@@ -1,9 +1,11 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 using Talabat.Core.Repository.Contract;
 using Talabat.Repository;
-using Talabat.Repository.Data;
+using Talabat.Repository.CartRepository;
+using Talabat.Repository.GenericRepository.Data;
 using TalabatAPIs.Errors;
 using TalabatAPIs.Extensions;
 using TalabatAPIs.Helper;
@@ -28,6 +30,12 @@ namespace TalabatAPIs
             });
 
             webApplicationbuilder.Services.AddApplicationServices();
+            webApplicationbuilder.Services.AddScoped<IConnectionMultiplexer, ConnectionMultiplexer>(ServiceProvider =>
+            {
+            var connection = webApplicationbuilder.Configuration.GetConnectionString("redisConnection");
+                return ConnectionMultiplexer.Connect(connection);
+            });
+            webApplicationbuilder.Services.AddScoped(typeof(ICartRepository),typeof(CartRepository));
             #endregion
             var app = webApplicationbuilder.Build();
 

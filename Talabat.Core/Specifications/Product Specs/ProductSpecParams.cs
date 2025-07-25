@@ -12,14 +12,14 @@ namespace Talabat.Core.Specifications.Product_Specs
         public string? Sort { get; set; }
         public int? BrandId { get; set; }
         public int? CategoryId { get; set; }
-        private int pageSize;
+        private int pageSize=10;
 
         public int PageSize
         {
             get { return pageSize; }
             set { pageSize = value>MaxPageSize?MaxPageSize:value; }
         }
-        public int PageIndex { get; set; }
+        public int PageIndex { get; set; } = 1;
 
         private string? search;
 

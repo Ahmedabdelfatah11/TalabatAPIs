@@ -7,15 +7,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Talabat.Core.Entities;
 
-namespace Talabat.Repository.Data.Config
+namespace Talabat.Repository.GenericRepository.Data.Config
 {
     public class ProductConfigrations : IEntityTypeConfiguration<Product>
     {
         public void Configure(EntityTypeBuilder<Product> builder)
         {
-         builder.Property(P=>P.Name).
-                IsRequired()
-                .HasMaxLength(100);
+            builder.Property(P => P.Name).
+                   IsRequired()
+                   .HasMaxLength(100);
 
             builder.Property(P => P.Description)
                 .IsRequired();

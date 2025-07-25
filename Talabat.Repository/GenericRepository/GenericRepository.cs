@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 using Talabat.Core.Entities;
 using Talabat.Core.Repository.Contract;
 using Talabat.Core.Specifications;
-using Talabat.Repository.Data;
+using Talabat.Repository.GenericRepository.Data;
 
-namespace Talabat.Repository
+namespace Talabat.Repository.GenericRepository
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T: BaseEntity
+    public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
         private readonly StoreContext _dbContext;
 
@@ -28,7 +28,7 @@ namespace Talabat.Repository
             return await _dbContext.Set<T>().ToListAsync();
         }
 
-      
+
 
         public async Task<T?> GetAsync(int id)
         {
@@ -41,20 +41,20 @@ namespace Talabat.Repository
 
         public async Task<IReadOnlyList<T>> GetAllWithSpecAsync(ISpecifications<T> spec)
         {
-           return await ApplySpecifications(spec).AsNoTracking().ToListAsync();
+            return await ApplySpecifications(spec).AsNoTracking().ToListAsync();
         }
         public async Task<T?> GetWithSpecAsync(ISpecifications<T> spec)
         {
             return await ApplySpecifications(spec).FirstOrDefaultAsync();
         }
-        private  IQueryable<T> ApplySpecifications(ISpecifications<T> spec)
+        private IQueryable<T> ApplySpecifications(ISpecifications<T> spec)
         {
-            return  SpecificationEvaluator<T>.GetQuery(_dbContext.Set<T>(), spec);
+            return SpecificationEvaluator<T>.GetQuery(_dbContext.Set<T>(), spec);
         }
 
         public async Task<int> GetCountAsync(ISpecifications<T> spec)
         {
-           return await ApplySpecifications(spec).CountAsync();
+            return await ApplySpecifications(spec).CountAsync();
         }
     }
 
