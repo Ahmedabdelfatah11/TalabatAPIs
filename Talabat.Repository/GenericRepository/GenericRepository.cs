@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Talabat.Core.Entities;
 using Talabat.Core.Repository.Contract;
 using Talabat.Core.Specifications;
-using Talabat.Repository.GenericRepository.Data;
+using Talabat.Repository.Data;
 
 namespace Talabat.Repository.GenericRepository
 {

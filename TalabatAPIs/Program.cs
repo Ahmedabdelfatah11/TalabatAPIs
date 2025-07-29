@@ -1,11 +1,14 @@
 
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
+using Talabat.Core.Entities;
 using Talabat.Core.Repository.Contract;
 using Talabat.Repository;
 using Talabat.Repository.CartRepository;
-using Talabat.Repository.GenericRepository.Data;
+using Talabat.Repository.Data;
+using Talabat.Repository.Identity;
 using TalabatAPIs.Errors;
 using TalabatAPIs.Extensions;
 using TalabatAPIs.Helper;
@@ -36,6 +39,15 @@ namespace TalabatAPIs
                 return ConnectionMultiplexer.Connect(connection);
             });
             webApplicationbuilder.Services.AddScoped(typeof(ICartRepository),typeof(CartRepository));
+
+
+            webApplicationbuilder.Services.AddDbContext<ApplicationIdentityDbContext> (options =>
+            {
+                options.UseSqlServer(webApplicationbuilder.Configuration.GetConnectionString("IdentityConnection"));
+            });
+
+            webApplicationbuilder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationIdentityDbContext>();
             #endregion
             var app = webApplicationbuilder.Build();
 
@@ -45,12 +57,17 @@ namespace TalabatAPIs
             var Services = scope.ServiceProvider;
 
             var _dbcontext = Services.GetRequiredService<StoreContext>();
+            var _identityDbContext = Services.GetRequiredService<ApplicationIdentityDbContext>();
 
             var logger = Services.GetRequiredService<ILogger<Program>>();
             try
             {
                 await StoredContextSeed.SeedAsync(_dbcontext);
                 await _dbcontext.Database.MigrateAsync();
+                await _identityDbContext.Database.MigrateAsync();
+
+                var _userManager = Services.GetRequiredService<UserManager<ApplicationUser>>();
+                await ApplicationIdentityDataSeeding.SeedUsersAsync(_userManager);
 
             }
             catch(Exception ex)
